@@ -1,0 +1,75 @@
+<?xml version="1.0" ?>
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:ObjectManager/etc/config.xsd">
+    <preference for="Chalhoub\Shopfinder\Api\Data\ShopInterface" type="Chalhoub\Shopfinder\Model\Shop" />
+	<preference for="Chalhoub\Shopfinder\Api\ShopRepositoryInterface" type="Chalhoub\Shopfinder\Model\ShopRepository"/>
+	<preference for="Chalhoub\Shopfinder\Api\Data\ShopSearchResultsInterface" type="Magento\Framework\Api\SearchResults"/>
+	<virtualType name="Chalhoub\Shopfinder\Model\ResourceModel\Shop\Grid\Collection" type="Magento\Framework\View\Element\UiComponent\DataProvider\SearchResult">
+		<arguments>
+			<argument name="mainTable" xsi:type="string">shopfinder_shop</argument>
+			<argument name="resourceModel" xsi:type="string">Chalhoub\Shopfinder\Model\ResourceModel\Shop\Collection</argument>
+		</arguments>
+	</virtualType>
+	<virtualType name="Chalhoub\Shopfinder\Model\Api\SearchCriteria\CollectionProcessor\ShopFilterProcessor" type="Magento\Framework\Api\SearchCriteria\CollectionProcessor\FilterProcessor">
+        <arguments>
+            <argument name="customFilters" xsi:type="array">
+                <item name="store_id" xsi:type="object">Chalhoub\Shopfinder\Model\Api\SearchCriteria\CollectionProcessor\FilterProcessor\ShopStoreFilter</item>
+            </argument>
+        </arguments>
+    </virtualType>
+	<virtualType name="Chalhoub\Shopfinder\Model\Api\SearchCriteria\ShopCollectionProcessor" type="Magento\Framework\Api\SearchCriteria\CollectionProcessor">
+        <arguments>
+            <argument name="processors" xsi:type="array">
+                <item name="filters" xsi:type="object">Chalhoub\Shopfinder\Model\Api\SearchCriteria\CollectionProcessor\ShopFilterProcessor</item>
+                <item name="sorting" xsi:type="object">Magento\Framework\Api\SearchCriteria\CollectionProcessor\SortingProcessor</item>
+                <item name="pagination" xsi:type="object">Magento\Framework\Api\SearchCriteria\CollectionProcessor\PaginationProcessor</item>
+            </argument>
+        </arguments>
+    </virtualType>
+	<type name="Magento\Framework\Model\Entity\RepositoryFactory">
+        <arguments>
+            <argument name="entities" xsi:type="array">
+                <item name="Chalhoub\Shopfinder\Api\Data\ShopInterface" xsi:type="string">Chalhoub\Shopfinder\Api\ShopRepositoryInterface</item>
+            </argument>
+        </arguments>
+    </type>
+	<type name="Magento\Framework\EntityManager\MetadataPool">
+        <arguments>
+            <argument name="metadata" xsi:type="array">
+                <item name="Chalhoub\Shopfinder\Api\Data\ShopInterface" xsi:type="array">
+                    <item name="entityTableName" xsi:type="string">shopfinder_shop</item>
+                    <item name="identifierField" xsi:type="string">shop_id</item>
+                </item>
+            </argument>
+        </arguments>
+    </type>
+	<type name="Magento\Framework\EntityManager\HydratorPool">
+        <arguments>
+            <argument name="hydrators" xsi:type="array">
+                <item name="Chalhoub\Shopfinder\Api\Data\ShopInterface" xsi:type="string">Magento\Framework\EntityManager\AbstractModelHydrator</item>
+            </argument>
+        </arguments>
+    </type>
+	<type name="Magento\Framework\View\Element\UiComponent\DataProvider\CollectionFactory">
+		<arguments>
+			<argument name="collections" xsi:type="array">
+				<item name="shopfinder_shop_listing_data_source" xsi:type="string">Chalhoub\Shopfinder\Model\ResourceModel\Shop\Grid\Collection</item>
+			</argument>
+		</arguments>
+	</type>
+	    <type name="Magento\Framework\Model\Entity\RepositoryFactory">
+        <arguments>
+            <argument name="entities" xsi:type="array">
+                <item name="Chalhoub\Shopfinder\Api\Data\ShopInterface" xsi:type="string">Chalhoub\Shopfinder\Api\ShopRepositoryInterface</item>
+            </argument>
+        </arguments>
+    </type>
+     <type name="Magento\Framework\GraphQl\Query\Resolver\Argument\FieldEntityAttributesPool">
+        <arguments>
+            <argument name="attributesInstances" xsi:type="array">
+                <item name="shops" xsi:type="object">
+                    \Chalhoub\Shopfinder\Model\Resolver\FilterArgument
+                </item>
+            </argument>
+        </arguments>
+    </type>
+</config>

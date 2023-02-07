@@ -1,0 +1,50 @@
+type Query {
+  ShopFinder(
+    filter: ShopsFilterInput @doc(description: "")
+    pageSize: Int = 0
+      @doc(description: "How many shops should show on the page, 0 for no limit")
+    currentPage: Int = 1
+      @doc(description: "Allows using pagination. It starts with 1")
+  ): ShopsOutput @resolver(class: "\\Chalhoub\\Shopfinder\\Model\\Resolver\\ShopFinder")@doc(description: "The Impelemention to resolve Shopfinder shops")
+     Shop (
+  identifier:String  @doc(description: "")
+  ): 
+  singleShopOutput @resolver(class: "\\Chalhoub\\Shopfinder\\Model\\Resolver\\Shop")@doc(description: "Implementation")
+}
+type Mutation {
+    UpdateShop (input: UpdateShopInput!): UpdateShopOutput @resolver(class: "\\Chalhoub\\Shopfinder\\Model\\Resolver\\CreateShop") @doc(description:"Update Shop, sending the identifier and the fields to modify")
+}
+input ShopsFilterInput {
+  name: FilterTypeInput @doc(description: "")
+  identifier: FilterTypeInput @doc(description: "")
+  or: ShopsFilterInput
+}
+
+ type singleShopOutput {
+  shop: [Shop] @doc(description: "")
+}
+type ShopsOutput {
+  total_count: Int @doc(description: "")
+  pageSize:Int @doc(description: "")
+  shops: [Shop] @doc(description: "")
+}
+ 
+type Shop {
+  name: String @doc(description: "Shop Name")
+  identifier: String @doc(description: "Shop Unique Identifier")
+  country: String @doc(description: "Shop Country")
+  image: String @doc(description: "Shop Image url")
+  geolocation: String @doc(description: "Latitude/Longitude for the Shop Geolocation")
+  creation_time: String @doc(description: "Shop Creation Timestamp") 
+  update_time: String @doc(description: "Shop last updated timestamp")
+}
+input UpdateShopInput {
+  identifier: String @doc(description: "Shop Unique Identifier, This field will be used to Identify the shop to update")
+  name: String @doc(description: "Shop Name")
+  country: String @doc(description: "Country code according to ISO 3166-1")
+  geolocation: String @doc(description: "Latitude/Longitude for the Shop Geolocation (numeric latitude::,numeric longitude)")
+}
+type UpdateShopOutput {
+   success: Boolean
+   message: String
+}
