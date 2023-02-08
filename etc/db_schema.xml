@@ -1,31 +1,17 @@
-<?xml version="1.0"?>
-<!--
-/**
- * Copyright © Magento, Inc. All rights reserved.
- * See COPYING.txt for license details.
- */
--->
-<schema xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-        xsi:noNamespaceSchemaLocation="urn:magento:framework:Setup/Declaration/Schema/etc/schema.xsd">
-    <table name="shopfinder_shop" resource="default" engine="innodb" comment="Chalhoub ShopFinder Shop Table">
-        <column xsi:type="smallint" name="shop_id" unsigned="false" nullable="false" identity="true" comment="Entity ID"/>
-        <column xsi:type="varchar" name="name" nullable="false" length="255" comment="Shop Name"/>
-        <column xsi:type="varchar" name="identifier" nullable="false" length="255" comment="Shop Identifier String"/> 
-        <column xsi:type="varchar" name="country" nullable="false" length="255" comment="Shop Country"/>
-        <column xsi:type="varchar" name="image" nullable="true" length="255" comment="Shop Image"/>
-        <column xsi:type="varchar" name="geolocation" nullable="true" length="255" comment="Latitude/Longitude"/>  
-        <column xsi:type="timestamp" name="creation_time" on_update="false" nullable="false" default="CURRENT_TIMESTAMP" comment="Shop Creation Time"/>
-        <column xsi:type="timestamp" name="update_time" on_update="true" nullable="false" default="CURRENT_TIMESTAMP" comment="Shop Modification Time"/>
-    
-        <constraint xsi:type="primary" referenceId="PRIMARY">
-            <column name="shop_id"/>
+<?xml version="1.0" ?>
+<schema xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:Setup/Declaration/Schema/etc/schema.xsd">
+	<table name="chalhoub_shopfinder_shopfinder" resource="default" engine="innodb" comment="chalhoub_shopfinder_shopfinder Table">
+		<column xsi:type="int" name="shopfinder_id" padding="10" unsigned="true" nullable="false" identity="true" comment="Entity Id"/>
+		<constraint xsi:type="primary" referenceId="PRIMARY">
+			<column name="shopfinder_id"/>
+		</constraint>
+		<column name="shop_name" nullable="true" xsi:type="text" comment="shop_name"/>
+
+        <column xsi:type="varchar" name="Identifier" nullable="false" length="255" comment="Identifier"/>
+        <column xsi:type="varchar" name="Country" nullable="false" length="255" comment="Country" />
+        <column xsi:type="varchar" name="Image" nullable="false" length="255" comment="Image" />
+        <constraint xsi:type="unique" referenceId="IDENTIFIER_SHOP">
+            <column name="Identifier"/>
         </constraint>
-        <constraint xsi:type="unique" referenceId="CHALHOUB_SHOPFINDER_SHOP_IDENTIFIER_TEXT_IDENTIFIER">
-            <column name="identifier"/>
-        </constraint>
-        <index referenceId="SHOPFINDER_SHOP_IDENTIFIER_NAME" indexType="fulltext">
-            <column name="name"/>
-            <column name="identifier"/>
-        </index>
-    </table>
+	</table>
 </schema>

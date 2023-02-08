@@ -1,50 +1,59 @@
 type Query {
-  ShopFinder(
-    filter: ShopsFilterInput @doc(description: "")
-    pageSize: Int = 0
-      @doc(description: "How many shops should show on the page, 0 for no limit")
+  fetchShop(
+    filter: ShopFinderFilterInput @doc(description: "")
+    pageSize: Int = 5
+      @doc(description: "How many items should show on the page")
     currentPage: Int = 1
-      @doc(description: "Allows using pagination. It starts with 1")
-  ): ShopsOutput @resolver(class: "\\Chalhoub\\Shopfinder\\Model\\Resolver\\ShopFinder")@doc(description: "The Impelemention to resolve Shopfinder shops")
-     Shop (
-  identifier:String  @doc(description: "")
-  ): 
-  singleShopOutput @resolver(class: "\\Chalhoub\\Shopfinder\\Model\\Resolver\\Shop")@doc(description: "Implementation")
-}
-type Mutation {
-    UpdateShop (input: UpdateShopInput!): UpdateShopOutput @resolver(class: "\\Chalhoub\\Shopfinder\\Model\\Resolver\\CreateShop") @doc(description:"Update Shop, sending the identifier and the fields to modify")
-}
-input ShopsFilterInput {
-  name: FilterTypeInput @doc(description: "")
-  identifier: FilterTypeInput @doc(description: "")
-  or: ShopsFilterInput
+      @doc(description: "Allows to using paging it start with 1")
+  ): ShopFindersOutput
+    @resolver(
+      class: "\\Chalhoub\\ShopFinder\\Model\\Resolver\\FetchShop"
+    )
+    @doc(description: "Allow to query for a shop.")
 }
 
- type singleShopOutput {
-  shop: [Shop] @doc(description: "")
+type Mutation {
+  createShop(input: ShopFinderInput!): ShopFinderOutput
+    @resolver(
+      class: "\\Chalhoub\\ShopFinder\\Model\\Resolver\\CreateShop"
+    )
+    @doc(description: "Create a new shop")
+
+  updateShop(id: Int!, input: ShopFinderInput): ShopFinderOutput @resolver(class: "Chalhoub\\ShopFinder\\Model\\Resolver\\UpdateShop") @doc(description: "Update customer address")
+
+  deleteShop(id: Int!): Boolean @resolver(class: "Chalhoub\\ShopFinder\\Model\\Resolver\\DeleteShop") @doc(description: "Delete Shop")
 }
-type ShopsOutput {
+
+type ShopFinderOutput {
+  shop: ShopFinder!
+}
+
+input ShopFinderInput {
+  shop_name: String @doc(description: "")
+  Identifier: String @doc(description: "")
+  Country: String @doc(description: "")
+  Image: String @doc(description: "")
+}
+
+input ShopFinderFilterInput {
+  shop_name: FilterTypeInput @doc(description: "")
+  Identifier: FilterTypeInput @doc(description: "")
+  Country: FilterTypeInput @doc(description: "")
+  Image: FilterTypeInput @doc(description: "")
+  or: ShopFinderFilterInput
+}
+
+type ShopFindersOutput {
   total_count: Int @doc(description: "")
-  pageSize:Int @doc(description: "")
-  shops: [Shop] @doc(description: "")
+  items: [ShopFinder] @doc(description: "")
 }
- 
-type Shop {
-  name: String @doc(description: "Shop Name")
-  identifier: String @doc(description: "Shop Unique Identifier")
-  country: String @doc(description: "Shop Country")
-  image: String @doc(description: "Shop Image url")
-  geolocation: String @doc(description: "Latitude/Longitude for the Shop Geolocation")
-  creation_time: String @doc(description: "Shop Creation Timestamp") 
-  update_time: String @doc(description: "Shop last updated timestamp")
+
+type ShopFinder {
+  shopfinder_id: Int @doc(description: "")
+  shop_name: String @doc(description: "")
+  Identifier: String @doc(description: "")
+  Country: String @doc(description: "")
+  Image: String @doc(description: "")
 }
-input UpdateShopInput {
-  identifier: String @doc(description: "Shop Unique Identifier, This field will be used to Identify the shop to update")
-  name: String @doc(description: "Shop Name")
-  country: String @doc(description: "Country code according to ISO 3166-1")
-  geolocation: String @doc(description: "Latitude/Longitude for the Shop Geolocation (numeric latitude::,numeric longitude)")
-}
-type UpdateShopOutput {
-   success: Boolean
-   message: String
-}
+
+

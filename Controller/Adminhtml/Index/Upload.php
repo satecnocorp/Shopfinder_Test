@@ -1,54 +1,37 @@
 <?php
 
-namespace Chalhoub\Shopfinder\Controller\Adminhtml\Index;
+namespace Chalhoub\ShopFinder\Controller\Adminhtml\Index;
 
 use Magento\Framework\Controller\ResultFactory;
 
 class Upload extends \Magento\Backend\App\Action
 {
-
-    /**
-     * @var \Chalhoub\Shopfinder\Model\ImageUploader
-     */
     public $imageUploader;
 
-    /**
-     * Upload constructor.
-     * @param \Magento\Backend\App\Action\Context $context
-     * @param \Chalhoub\Shopfinder\Model\ImageUploader $imageUploader
-     */
-	public function __construct(
-		\Magento\Backend\App\Action\Context $context,
-		\Chalhoub\Shopfinder\Model\ImageUploader $imageUploader
-	) {
-		parent::__construct($context);
-		$this->imageUploader = $imageUploader;
-	}
+    public function __construct(
+        \Magento\Backend\App\Action\Context $context,
+        \Chalhoub\ShopFinder\Model\ImageUploader $imageUploader
+    ) {
+        parent::__construct($context);
+        $this->imageUploader = $imageUploader;
+    }
 
-    /**
-     * @return mixed
-     */
-	public function _isAllowed() {
-        return true;
-		return $this->_authorization->isAllowed('Chalhoub_Shopfinder::upload');
-	}
 
-    /**
-     * @return mixed
-     */
-    public function execute() {
-		try {
-			$result = $this->imageUploader->saveFileToTmpDir('image');
-			$result['cookie'] = [
-				'name' => $this->_getSession()->getName(),
-				'value' => $this->_getSession()->getSessionId(),
-				'lifetime' => $this->_getSession()->getCookieLifetime(),
-				'path' => $this->_getSession()->getCookiePath(),
-				'domain' => $this->_getSession()->getCookieDomain(),
-			];
-		} catch (\Exception $e) {
-			$result = ['error' => $e->getMessage(), 'errorcode' => $e->getCode()];
-		}
-		return $this->resultFactory->create(ResultFactory::TYPE_JSON)->setData($result);
-	}
+    public function execute()
+    {
+        try {
+
+            $result = $this->imageUploader->saveFileToTmpDir('Image');
+            $result['cookie'] = [
+                'name' => $this->_getSession()->getName(),
+                'value' => $this->_getSession()->getSessionId(),
+                'lifetime' => $this->_getSession()->getCookieLifetime(),
+                'path' => $this->_getSession()->getCookiePath(),
+                'domain' => $this->_getSession()->getCookieDomain(),
+            ];
+        } catch (\Exception $e) {
+            $result = ['error' => $e->getMessage(), 'errorcode' => $e->getCode()];
+        }
+        return $this->resultFactory->create(ResultFactory::TYPE_JSON)->setData($result);
+    }
 }

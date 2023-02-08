@@ -1,7 +1,9 @@
 <?php
+/**
+ * Copyright ©  All rights reserved.
+ * See COPYING.txt for license details.
+ */
 use Magento\Framework\Component\ComponentRegistrar;
-ComponentRegistrar::register(
-    \Magento\Framework\Component\ComponentRegistrar::MODULE,
-    'Chalhoub_Shopfinder',
-    __DIR__
-);
+
+ComponentRegistrar::register(ComponentRegistrar::MODULE, 'Chalhoub_ShopFinder', __DIR__);
+

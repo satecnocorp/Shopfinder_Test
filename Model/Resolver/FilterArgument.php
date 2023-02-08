@@ -1,8 +1,6 @@
 <?php
 
-declare(strict_types=1);
-
-namespace Chalhoub\Shopfinder\Model\Resolver;
+namespace Chalhoub\ShopFinder\Model\Resolver;
 
 use Magento\Framework\GraphQl\Config\Element\Field;
 use Magento\Framework\GraphQl\ConfigInterface;
@@ -22,7 +20,9 @@ class FilterArgument implements FieldEntityAttributesInterface
     {
         $fields = [];
         /** @var Field $field */
-        foreach ($this->config->getConfigElement('Shop')->getFields() as $field) {
+
+        foreach ($this->config->getConfigElement('ShopFinder')->getFields() as $field) {
+
             $fields[$field->getName()] = [
                 'type' => 'String',
                 'fieldName' => $field->getName(),

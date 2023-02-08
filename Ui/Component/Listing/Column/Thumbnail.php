@@ -1,58 +1,67 @@
 <?php
 
-namespace Chalhoub\Shopfinder\Ui\Component\Listing\Column;
+namespace Chalhoub\ShopFinder\Ui\Component\Listing\Column;
 
+use Magento\Catalog\Helper\Image;
+use Magento\Framework\UrlInterface;
 use Magento\Framework\View\Element\UiComponentFactory;
 use Magento\Framework\View\Element\UiComponent\ContextInterface;
 use Magento\Store\Model\StoreManagerInterface;
+use Magento\Ui\Component\Listing\Columns\Column;
 
-class Thumbnail extends \Magento\Ui\Component\Listing\Columns\Column
+class Thumbnail extends Column
 {
-    const NAME = 'image';
-    const ALT_FIELD = 'name';
+    const ALT_FIELD = 'title';
+
+    /**
+     * @var \Magento\Store\Model\StoreManagerInterface
+     */
     protected $storeManager;
 
     /**
      * @param ContextInterface $context
      * @param UiComponentFactory $uiComponentFactory
-     * @param \Magento\Catalog\Helper\Image $imageHelper
-     * @param \Magento\Framework\UrlInterface $urlBuilder
+     * @param Image $imageHelper
+     * @param UrlInterface $urlBuilder
+     * @param StoreManagerInterface $storeManager
      * @param array $components
      * @param array $data
      */
     public function __construct(
         ContextInterface $context,
         UiComponentFactory $uiComponentFactory,
+        Image $imageHelper,
+        UrlInterface $urlBuilder,
         StoreManagerInterface $storeManager,
         array $components = [],
         array $data = []
     ) {
-        parent::__construct($context, $uiComponentFactory, $components, $data);
         $this->storeManager = $storeManager;
+        $this->imageHelper = $imageHelper;
+        $this->urlBuilder = $urlBuilder;
+        parent::__construct($context, $uiComponentFactory, $components, $data);
     }
 
     /**
      * Prepare Data Source
      *
      * @param array $dataSource
+     *
      * @return array
      */
     public function prepareDataSource(array $dataSource)
     {
         if (isset($dataSource['data']['items'])) {
             $fieldName = $this->getData('name');
-            $path=$this->storeManager->getStore()->getBaseUrl(\Magento\Framework\UrlInterface::URL_TYPE_MEDIA) . 'wysiwyg/shopfinder/';
-            foreach ($dataSource['data']['items'] as & $item) {
-                if (/*isset($item['image']) && */$item['image']) {
-                    $item[$fieldName . '_src'] = $path.$item['image'];
-                    $item[$fieldName . '_alt'] = $item['name'];
-                    $item[$fieldName . '_orig_src'] = $path.$item['image'];
-                }else{
-                    /*TODO  //send placeholder image to pub/media/chalhoub/shopfinder/placeholder/placeholder.jpg*/
-                    $item[$fieldName . '_src'] = $path.'chalhoub/shopfinder/placeholder/placeholder.jpg';
-                    $item[$fieldName . '_alt'] = 'Place Holder';
-                    $item[$fieldName . '_orig_src'] = $path.'chalhoub/shopfinder/placeholder/placeholder.jpg';
+            foreach($dataSource['data']['items'] as &$item) {
+                $url = '';
+                if($item[$fieldName] != '') {
+                    $url = $this->storeManager->getStore()->getBaseUrl(
+                            UrlInterface::URL_TYPE_MEDIA
+                        ) . 'shopfinder/tmp/' . $item[$fieldName];
                 }
+                $item[$fieldName . '_src'] = $url;
+                $item[$fieldName . '_orig_src'] = $url;
             }
         }
 
